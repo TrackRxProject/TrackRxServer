@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class QuickstartConfig(AppConfig):
-    name = 'quickstart'
+class ApiserverConfig(AppConfig):
+    name = 'apiserver'

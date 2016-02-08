@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework import routers
-from TrackRxServer.quickstart import views
+from TrackRxServer.apiserver import views
 
 '''
 router = routers.DefaultRouter()
@@ -28,7 +28,7 @@ router.register(r'groups', views.GroupViewSet)
 urlpatterns = [
         # url(r'^', include(router.urls)),
         url(r'^test-bottle/', views.TestBottle.as_view()),
-        url(r'^prescription/(?P<uuid>[0-9]+)$', views.prescription_interval),
+        url(r'^prescription/(?P<uuid>[0-9]+)$', views.PrescriptionAPI.as_view()),
         # url(r'^api-auth/', include('rest_framework.urls',
         #                           namespace='rest_framework')),
 ]
