@@ -3,25 +3,27 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-# Create your models here.
-class Patient(models.Model):
-    uuid = models.IntegerField()
-
-    class Meta:
-        db_table = "patient"
-
-
 class Prescription(models.Model):
-    uuid = models.ForeignKey(Patient)
-    interval = models.IntegerField()
+    uuid = models.IntegerField()
+    interval = models.CharField(max_length=5)
+    activate = models.BooleanField()
 
     class Meta:
         db_table = "prescription"
 
 
-class Dose(models.Model):
-    prescription = models.ForeignKey(Prescription)
-    uuid = models.IntegerField()
+class Adherence(models.Model):
+    uuid = models.ForeignKey(Prescription)
+    history = models.CharField(max_length=100)
 
     class Meta:
-        db_table = "dose"
+        db_table = "adherence"
+
+
+class Info(models.Model):
+    uuid = models.ForeignKey(Prescription)
+    name = models.TextField()
+    dosage = models.TextField()
+
+    class Meta:
+        db_table = "info"

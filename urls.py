@@ -17,18 +17,22 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from TrackRxServer.apiserver import views
 
-'''
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
-'''
+router.register(r'prescription', views.PrescriptionViewSet,
+                base_name='Prescription')
+router.register(r'adherence', views.AdherenceViewSet,
+                base_name='Adherence')
+router.register(r'info', views.InfoViewSet,
+                base_name='Info')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
         # url(r'^', include(router.urls)),
-        url(r'^test-bottle/', views.TestBottle.as_view()),
-        url(r'^prescription/(?P<uuid>[0-9]+)$', views.PrescriptionAPI.as_view()),
+        url(r'^', include(router.urls)),
+        # url(r'^test-bottle/', views.TestBottle.as_view()),
+        # url(r'^prescription/(?P<uuid>[0-9]+)$', views.Prescription.as_view()),
+        # url(r'^activate/(?P<uuid>[0-9]+)$', views.ActivateAPI.as_view()),
         # url(r'^api-auth/', include('rest_framework.urls',
         #                           namespace='rest_framework')),
 ]

@@ -1,27 +1,52 @@
-from django.shortcuts import render
-from django.views.generic import View
-# from django.contrib.auth.models import User, Group
-# from models import Prescription, Dose
-from django.http import HttpResponse
-# from rest_framework import viewsets
-# from rest_framework.decorators import api_view
-# from rest_framework.response import Response
-# from TrackRxServer.apiserver.serializers import UserSerializer,GroupSerializer
+# from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from models import Prescription, Adherence, Info
+from serializers import PrescriptionSerializer, AdherenceSerializer
+from serializers import InfoSerializer
+# from rest_framework.response import Response
+from rest_framework import viewsets
 
 
-class TestBottle(View):
-    def get(self, request):
-        return render(request, 'test_bottle.html')
+class PrescriptionViewSet(viewsets.ModelViewSet):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
 
-
-class PrescriptionAPI(View):
-    def get(self, request, uuid):
+    def interval(self, request, uuid):
         # interval = Prescription.objects.get(uuid=uuid).interval
-        interval = '02.50'
-        return HttpResponse(interval, content_type='text/plain')
+        print uuid
+        # interval = '02.50'
+        # return HttpResponse(interval, content_type='text/plain')
 
     @csrf_exempt
-    def post(self, request, uuid):
+    def activate(self, request, uuid):
         print uuid
-        return HttpResponse('OK', content_type='text/plain')
+        # return HttpResponse('OK', content_type='text/plain')
+
+    def is_activated(self, request, uuid):
+        print uuid
+
+
+class AdherenceViewSet(viewsets.ModelViewSet):
+    queryset = Adherence.objects.all()
+    serializer_class = AdherenceSerializer
+
+    @csrf_exempt
+    def update_adherence(self, request, uuid):
+        print uuid
+        # print request.POST.get('uuid')
+
+    def adhr_history(self, request, uuid):
+        print uuid
+
+
+class InfoViewSet(viewsets.ModelViewSet):
+    queryset = Info.objects.all()
+    serializer_class = InfoSerializer
+
+    @csrf_exempt
+    def set_info(self, request, uuid):
+        print uuid
+
+    def prescription_info(self, request, uuid):
+        print "hi!"
+        print uuid
