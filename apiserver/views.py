@@ -1,4 +1,4 @@
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from models import Prescription
 from models import Adherence
@@ -7,7 +7,6 @@ from serializers import PrescriptionSerializer
 from serializers import AdherenceSerializer
 from serializers import InfoSerializer
 from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.views import APIView
 
 
@@ -22,7 +21,6 @@ class PrescriptionActivate(APIView):
         if ser.is_valid():
             ser.save()
             return Response(ser.data, status=201)
-        # return HttpResponse('OK', content_type='text/plain')
 
     def get(self, request, uuid):
         print uuid
@@ -31,39 +29,37 @@ class PrescriptionActivate(APIView):
         # return Response(serializer.data.get('activate'))
         return Response(serializer.data)
 
-    '''
-    queryset = Prescription.objects.all()
-    serializer_class = PrescriptionSerializer
 
-    def interval(self, request, uuid):
-        # interval = Prescription.objects.get(uuid=uuid).interval
+class PrescriptionInterval(APIView):
+    def get(self, request, uuid):
+        interval = Prescription.objects.get(uuid=uuid).interval
         print uuid
-        # interval = '02.50'
-        # return HttpResponse(interval, content_type='text/plain')
-    '''
+        return HttpResponse(interval, content_type='text/plain')
 
 
-class AdherenceViewSet(viewsets.ModelViewSet):
-    queryset = Adherence.objects.all()
-    serializer_class = AdherenceSerializer
-
+class AdherenceView(APIView):
     @csrf_exempt
-    def update_adherence(self, request, uuid):
+    def post(self, request, uuid):
+        print request.data
+        # "bitvector" logic here
+        return HttpResponse('OK', status=201)
+
+    def get(self, request, uuid):
         print uuid
-        # print request.POST.get('uuid')
+        adh = Adherence.objects.get(uuid=uuid)
+        serializer = AdherenceSerializer(adh)
+        return Response(serializer.data)
 
-    def adhr_history(self, request, uuid):
-        print uuid
 
-
-class InfoViewSet(viewsets.ModelViewSet):
-    queryset = Info.objects.all()
-    serializer_class = InfoSerializer
-
+class InfoView(APIView):
     @csrf_exempt
-    def set_info(self, request, uuid):
-        print uuid
+    def put(self, request, uuid):
+        print request.data
+        # add new info to db
+        return HttpResponse('OK', status=201)
 
-    def prescription_info(self, request, uuid):
-        print "hi!"
+    def get(self, request, uuid):
         print uuid
+        inf = Info.objects.get(uuid=uuid)
+        serializer = InfoSerializer(inf)
+        return Response(serializer.data)
