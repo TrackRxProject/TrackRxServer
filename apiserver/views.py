@@ -1,13 +1,37 @@
 # from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from models import Prescription, Adherence, Info
-from serializers import PrescriptionSerializer, AdherenceSerializer
+from models import Prescription
+from models import Adherence
+from models import Info
+from serializers import PrescriptionSerializer
+from serializers import AdherenceSerializer
 from serializers import InfoSerializer
-# from rest_framework.response import Response
+from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.views import APIView
 
 
-class PrescriptionViewSet(viewsets.ModelViewSet):
+class PrescriptionActivate(APIView):
+
+    @csrf_exempt
+    def post(self, request, uuid):
+        print uuid
+        pres = Prescription.objects.get(uuid=uuid)
+        ser = PrescriptionSerializer(pres, data={'activate': True},
+                                     partial=True)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data, status=201)
+        # return HttpResponse('OK', content_type='text/plain')
+
+    def get(self, request, uuid):
+        print uuid
+        pres = Prescription.objects.get(uuid=uuid)
+        serializer = PrescriptionSerializer(pres)
+        # return Response(serializer.data.get('activate'))
+        return Response(serializer.data)
+
+    '''
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
 
@@ -16,14 +40,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         print uuid
         # interval = '02.50'
         # return HttpResponse(interval, content_type='text/plain')
-
-    @csrf_exempt
-    def activate(self, request, uuid):
-        print uuid
-        # return HttpResponse('OK', content_type='text/plain')
-
-    def is_activated(self, request, uuid):
-        print uuid
+    '''
 
 
 class AdherenceViewSet(viewsets.ModelViewSet):

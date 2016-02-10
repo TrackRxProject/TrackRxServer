@@ -2,6 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from views import PrescriptionViewSet, AdherenceViewSet, InfoViewSet
 # from rest_framework import renderers
+from views import PrescriptionActivate
 
 
 prescription_list = PrescriptionViewSet.as_view({
@@ -25,7 +26,8 @@ info = InfoViewSet.as_view({
 
 urlpatterns = [
     url(r'^prescription/(?P<uuid>[0-9]+)/interval$', prescription_list),
-    url(r'^prescription/(?P<uuid>[0-9]+)/activate$', prescription_activate),
+    url(r'^prescription/(?P<uuid>[0-9]+)/activate$',
+        PrescriptionActivate.as_view()),
     url(r'^adherence/(?P<uuid>[0-9]+)$', adherence),
     url(r'^info/(?P<uuid>[0-9]+)$', info),
 ]
