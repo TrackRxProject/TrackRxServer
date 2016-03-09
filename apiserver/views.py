@@ -54,7 +54,7 @@ class AdherenceView(APIView):
 class InfoView(APIView):
     @csrf_exempt
     def put(self, request, uuid):
-        print request.data
+        # print request.data
         # add new info to db
         return HttpResponse('OK', status=201)
 
