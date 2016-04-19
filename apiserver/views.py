@@ -9,6 +9,9 @@ from serializers import InfoSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import requests
+import json
+
 
 class PrescriptionActivate(APIView):
 
@@ -54,8 +57,21 @@ class AdherenceView(APIView):
 class InfoView(APIView):
     @csrf_exempt
     def put(self, request, uuid):
-        # print request.data
-        # add new info to db
+        url = 'https://gcm-http.googleapis.com/gcm/send'
+        headers = {'Authorization': 'key=AIzaSyArADgdOmRwMRFzsSj9p4G7c0U0cdW8reM',
+                   'Content-Type': 'application/json'}
+        payload = {
+            "data": {
+                "info": {
+                    "subject": "Medication Reminder",
+                    "message": "Time to take your medication",
+                }
+            },
+            "to" : "cIXiqCIanRg:APA91bEazp38G7yzsf8xXcrzdVgUCvr7PauD96jvv9VpDNl1aY2ePa-8E8by7tq6lo956YED2foLCNbHHuqcT8sqyU5ZyYeUcbDMKQcyfeTgvnekgzAZqcIh974dW30l3tWkLmm2sqp7"
+        }
+
+        requests.post(url, headers=headers, data=json.dumps(payload))
+
         return HttpResponse('OK', status=201)
 
     def get(self, request, uuid):
