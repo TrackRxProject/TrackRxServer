@@ -26,6 +26,7 @@ urlpatterns = [
             views.PrescriptionActivate.as_view()),
         url(r'^prescription/(?P<uuid>[0-9]+)/interval$',
             views.PrescriptionInterval.as_view()),
-        url(r'^info/(?P<uuid>[0-9]+)$', views.AdherenceView.as_view()),
-        url(r'^adherence/(?P<uuid>[0-9]+)$', views.InfoView.as_view()),
+        url(r'^info/(?P<uuid>[0-9]+)$', views.InfoView.as_view()),
+        url(r'^adherence/(?P<uuid>[0-9]+)$', views.AdherenceView.as_view()),
+        url(r'^notify/(?P<uuid>[0-9]+)$', views.InfoView.as_view()),
 ]

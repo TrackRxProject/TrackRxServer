@@ -19,7 +19,7 @@ adherence = AdherenceViewSet.as_view({
     'get': 'adhr_history',
 })
 
-info = InfoViewSet.as_view({
+notify = InfoViewSet.as_view({
     'get': 'prescription_info',
     'put': 'set_info'
 })
@@ -28,7 +28,8 @@ urlpatterns = [
     url(r'^prescription/(?P<uuid>[0-9]+)/interval$', prescription_list),
     url(r'^prescription/(?P<uuid>[0-9]+)/activate$',
         PrescriptionActivate.as_view()),
-    url(r'^adherence/(?P<uuid>[0-9]+)$', adherence),
+    # url(r'^adherence/(?P<uuid>[0-9]+)$', adherence),
+    url(r'^notify/(?P<uuid>[0-9]+)$', notify),
     url(r'^info/(?P<uuid>[0-9]+)$', info),
 ]
 

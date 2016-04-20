@@ -8,9 +8,27 @@ from serializers import AdherenceSerializer
 from serializers import InfoSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import BaseParser
+
 
 import requests
 import json
+
+class PlainTextParser(BaseParser):
+    """
+    Plain text parser.
+    """
+    media_type = 'text/plain'
+
+    def parse(self, stream, media_type=None, parser_context=None):
+        """
+        Simply return a string representing the body of the request.
+        """
+        data = stream.read()
+        for x in data:
+            print "Adherence = " + x
+        return stream.read()
 
 
 class PrescriptionActivate(APIView):
@@ -41,8 +59,11 @@ class PrescriptionInterval(APIView):
 
 
 class AdherenceView(APIView):
+
+    parser_classes = (PlainTextParser,)
+
     @csrf_exempt
-    def post(self, request, uuid):
+    def put(self, request, uuid):
         print request.data
         # "bitvector" logic here
         return HttpResponse('OK', status=201)
@@ -56,7 +77,7 @@ class AdherenceView(APIView):
 
 class InfoView(APIView):
     @csrf_exempt
-    def put(self, request, uuid):
+    def post(self, request, uuid):
         url = 'https://gcm-http.googleapis.com/gcm/send'
         headers = {'Authorization': 'key=AIzaSyArADgdOmRwMRFzsSj9p4G7c0U0cdW8reM',
                    'Content-Type': 'application/json'}
@@ -79,3 +100,4 @@ class InfoView(APIView):
         inf = Info.objects.get(uuid=uuid)
         serializer = InfoSerializer(inf)
         return Response(serializer.data)
+
