@@ -7,6 +7,7 @@ class Prescription(models.Model):
     uuid = models.IntegerField()
     interval = models.CharField(max_length=5)
     activate = models.BooleanField()
+    auth = models.BooleanField(default=False)
 
     class Meta:
         db_table = "prescription"
@@ -24,6 +25,7 @@ class Info(models.Model):
     uuid = models.ForeignKey(Prescription)
     name = models.TextField()
     dosage = models.TextField()
+    pin = models.TextField(default="")
 
     class Meta:
         db_table = "info"

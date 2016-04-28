@@ -57,6 +57,20 @@ class PrescriptionInterval(APIView):
         print uuid
         return HttpResponse(interval, content_type='text/plain')
 
+    # /pin/<uuid>/
+    @csrf_exempt
+    def post(self, request, uuid):
+        print "Here"
+        print request.data
+        print Info.objects.get(uuid=uuid).pin
+
+        if request.data['pin'] == Info.objects.get(uuid=uuid).pin:
+            p = Prescription.objects.get(uuid=uuid)
+            p.auth = True
+            p.save()
+
+        return HttpResponse('OK', status=201)
+
 
 class AdherenceView(APIView):
 
@@ -100,4 +114,18 @@ class InfoView(APIView):
         inf = Info.objects.get(uuid=uuid)
         serializer = InfoSerializer(inf)
         return Response(serializer.data)
+
+
+class AuthView(APIView):
+    def get(self, request, uuid):
+        retval = ""
+        print Prescription.objects.get(uuid=uuid).auth
+        if Prescription.objects.get(uuid=uuid).auth:
+            retval = "1"
+            Prescription.objects.get(uuid=uuid).auth = False
+            Prescription.objects.get(uuid=uuid).save()
+        else:
+            retval = "0"
+
+        return HttpResponse(retval, content_type='text/plain')
 
