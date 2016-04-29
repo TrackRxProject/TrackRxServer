@@ -28,7 +28,8 @@ class PlainTextParser(BaseParser):
         data = stream.read()
         for x in data:
             print "Adherence = " + x
-        return stream.read()
+
+        return data
 
 
 class PrescriptionActivate(APIView):
@@ -37,7 +38,7 @@ class PrescriptionActivate(APIView):
     def post(self, request, uuid):
         print uuid
         pres = Prescription.objects.get(uuid=uuid)
-        ser = PrescriptionSerializer(pres, data={'activate': True},
+        ser = PrescriptionSerializer(pres, data={'activate': True, 'reset': False},
                                      partial=True)
         if ser.is_valid():
             ser.save()
@@ -78,18 +79,30 @@ class AdherenceView(APIView):
 
     @csrf_exempt
     def put(self, request, uuid):
-        print request.data
-        # "bitvector" logic here
+        # TODO: logic for calculating which day?
+        for adh in request.data:
+            p = Prescription.objects.get(uuid=uuid)
+            if adh == '1':
+                a = Adherence(uuid=p, history=1)
+            else:
+                a = Adherence(uuid=p, history=0)
+            a.save()
+
         return HttpResponse('OK', status=201)
 
+    # /adherence/<uuid>
     def get(self, request, uuid):
-        print uuid
-        adh = Adherence.objects.get(uuid=uuid)
-        serializer = AdherenceSerializer(adh)
-        return Response(serializer.data)
+        adherences = Adherence.objects.filter(uuid_id=uuid)
+        histories = []
+        for adh in adherences:
+            histories.append(adh.history)
 
+        retval = json.dumps(histories)
+
+        return HttpResponse(retval, status=201)
 
 class InfoView(APIView):
+    # /notify/1
     @csrf_exempt
     def post(self, request, uuid):
         url = 'https://gcm-http.googleapis.com/gcm/send'
@@ -122,10 +135,30 @@ class AuthView(APIView):
         print Prescription.objects.get(uuid=uuid).auth
         if Prescription.objects.get(uuid=uuid).auth:
             retval = "1"
-            Prescription.objects.get(uuid=uuid).auth = False
-            Prescription.objects.get(uuid=uuid).save()
+            p = Prescription.objects.get(uuid=uuid)
+            p.auth = False
+            p.save()
         else:
             retval = "0"
 
         return HttpResponse(retval, content_type='text/plain')
+
+
+class ResetView(APIView):
+    def get(self, request, uuid):
+        if Prescription.objects.get(uuid=uuid).reset:
+            return HttpResponse("1", content_type='text/plain')
+        else:
+            return HttpResponse("0", content_type='text/plain')
+
+
+    @csrf_exempt
+    def put(self, request, uuid):
+        p = Prescription.objects.get(uuid=uuid)
+        if not p.reset:
+            p.reset = True
+            p.save()
+            return HttpResponse('RESET', status=201)
+        else:
+            return HttpResponse('NOTRESET', status=201)
 

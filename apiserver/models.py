@@ -8,6 +8,7 @@ class Prescription(models.Model):
     interval = models.CharField(max_length=5)
     activate = models.BooleanField()
     auth = models.BooleanField(default=False)
+    reset = models.BooleanField(default=False)
 
     class Meta:
         db_table = "prescription"
@@ -15,7 +16,7 @@ class Prescription(models.Model):
 
 class Adherence(models.Model):
     uuid = models.ForeignKey(Prescription)
-    history = models.CharField(max_length=100)
+    history = models.IntegerField()
 
     class Meta:
         db_table = "adherence"

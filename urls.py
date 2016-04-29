@@ -31,4 +31,5 @@ urlpatterns = [
         url(r'^notify/(?P<uuid>[0-9]+)$', views.InfoView.as_view()),
         url(r'^auth/(?P<uuid>[0-9]+)$', views.AuthView.as_view()),
         url(r'^pin/(?P<uuid>[0-9]+)$', views.PrescriptionInterval.as_view()),
+        url(r'^reset/(?P<uuid>[0-9]+)$', views.ResetView.as_view()),
 ]
